@@ -7,7 +7,7 @@ dns.setServers([
 ])
 async function connectDB() {
 
-    await mongoose.connect("mongodb+srv://yt:nSKJoPD3o8PndS4j@cluster1.hbidjim.mongodb.net/halley")
+    await mongoose.connect("process.env.MONGO_URI")
 
     console.log("Connected to DB");
     
