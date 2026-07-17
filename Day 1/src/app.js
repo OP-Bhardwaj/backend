@@ -1,5 +1,5 @@
 const express = require("express")
-const noteModel = require("src/models/note.model")
+const note = require("./models/note.model"); // Correct
 
 const app = express()
 
@@ -63,4 +63,3 @@ app.patch('/notes/:index', (req, res) => {
 
 module.exports = app;
 
-echo   "# backend" >> README.md
