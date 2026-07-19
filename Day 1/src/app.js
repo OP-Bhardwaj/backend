@@ -1,5 +1,5 @@
 const express = require("express")
-const note = require("./models/note.model"); // Correct
+const note = require("./models/note.model");
 
 const app = express()
 
