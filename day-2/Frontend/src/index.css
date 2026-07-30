@@ -29,3 +29,19 @@ padding-inline: 3rem;
   max-width: 20rem;
   color: rgb(240, 237, 232);
 }
+
+.note-create-form{
+  display: flex;
+  gap: 1rem;
+  padding-inline: 3rem;
+  padding-block: 1rem;
+}
+
+.button{
+  background-color: #494949;
+  color: rgb(240, 237, 232);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
