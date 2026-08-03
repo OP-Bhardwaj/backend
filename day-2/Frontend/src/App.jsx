@@ -10,7 +10,7 @@ function App() {
   const [editId, setEditId] = useState(null); 
 
   function fetchNotes() {
-    axios.get('http://localhost:3000/api/notes')
+    axios.get('https://backend-twts.onrender.com//api/notes')
       .then((res) => {
         setNotes(res.data.notes)
       })
@@ -26,7 +26,7 @@ function App() {
 
     if (editId) {
       // UPDATE EXISTING NOTE
-      axios.patch("http://localhost:3000/api/notes/" + editId, { title, description })
+      axios.patch("https://backend-twts.onrender.com/api/notes/" + editId, { title, description })
         .then(res => {
           fetchNotes();
           setTitle('');
@@ -36,7 +36,7 @@ function App() {
         .catch(err => console.log(err));
     } else {
       // CREATE NEW NOTE
-      axios.post("http://localhost:3000/api/notes", { title, description })
+      axios.post("https://backend-twts.onrender.com//api/notes", { title, description })
         .then(res => {
           fetchNotes();
           setTitle('');
@@ -47,7 +47,7 @@ function App() {
   }
 
   function handleDeleteNote(noteId) {
-    axios.delete("http://localhost:3000/api/notes/" + noteId)
+    axios.delete("https://backend-twts.onrender.com/api/notes/" + noteId)
       .then(res => {
         fetchNotes()
       })
