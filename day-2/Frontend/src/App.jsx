@@ -10,7 +10,7 @@ function App() {
   const [editId, setEditId] = useState(null); 
 
   function fetchNotes() {
-    axios.get('https://backend-twts.onrender.com//api/notes')
+    axios.get('https://backend-twts.onrender.com/api/notes')
       .then((res) => {
         setNotes(res.data.notes)
       })
@@ -36,7 +36,7 @@ function App() {
         .catch(err => console.log(err));
     } else {
       // CREATE NEW NOTE
-      axios.post("https://backend-twts.onrender.com//api/notes", { title, description })
+      axios.post("https://backend-twts.onrender.com/api/notes", { title, description })
         .then(res => {
           fetchNotes();
           setTitle('');
