@@ -1,22 +1,10 @@
-/**
- * server ko create
- */
+const express = require('express');
 
-const express = require("express")
-const noteModel = require("./models/note.model")
-const cors = require("cors")
-const path = require("path")
+const noteModel = require("./models/note.model");
+const app = express();
 
-const app = express()
-app.use(cors())
 app.use(express.json())
-app.use(express.static("./public"))
 
-/**
- * - POST /api/notes
- * - create new note and save data in mongodb
- * - req.body = {title,description}
- */
 app.post('/api/notes', async (req, res) => {
     const { title, description } = req.body
 
@@ -25,57 +13,46 @@ app.post('/api/notes', async (req, res) => {
     })
 
     res.status(201).json({
-        message: "note created successfully",
+        message: "note created succesfully",
         note
+
     })
 })
 
-/**
- * - GET /api/notes
- * - Fetch all the notes data from mongodb and send them in the response
- */
-app.get("/api/notes", async (req, res) => {
+
+app.get('/api/notes', async (req, res) => {
     const notes = await noteModel.find()
 
+
     res.status(200).json({
-        message: "Notes fetched successfully.",
+        message: "notes fetched successfully",
         notes
     })
+
 })
 
-/**
- * - DELETE /api/notes/:id
- * - Delete note with the id from req.params
- */
 app.delete('/api/notes/:id', async (req, res) => {
     const id = req.params.id
-
-    await noteModel.findByIdAndDelete(id)
+    const notes = await noteModel.findByIdAndDelete(id)
 
     res.status(200).json({
-        message: "Note deleted successfully."
+        message: "note deleted successfully"
     })
 })
 
-/**
- * - PATCH /api/notes/:id
- * - update the description of the note by id
- * - req.body = {description}
- */
 app.patch('/api/notes/:id', async (req, res) => {
-    const id = req.params.id
-    const { description } = req.body
 
-    await noteModel.findByIdAndUpdate(id, { description })
+    const id = req.params.id
+    const { description,title } = req.body
+    
+
+    const notes = await noteModel.findByIdAndUpdate(id, { description ,title })
+
 
     res.status(200).json({
-        message: "Note updated successfully."
+        message: "note updated successfully"
     })
-
 })
 
 
-
-
-
-module.exports = app
+module.exports = app;
