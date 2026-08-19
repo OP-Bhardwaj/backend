@@ -8,7 +8,7 @@ function App() {
   console.log("hello Integration")
 
   function fetchNotes() {
-    axios.get("https://cohort-2-0-m32u.onrender.com/api/notes")
+    axios.get("https://backend-twts.onrender.com/api/notes")
       .then(res => {
         setNotes(res.data.notes)
       })
@@ -25,7 +25,7 @@ function App() {
 
     console.log(title.value, description.value)
 
-    axios.post("https://cohort-2-0-m32u.onrender.com/api/notes", {
+    axios.post("https://backend-twts.onrender.com/api/notes", {
       title: title.value,
       description: description.value
     })
@@ -39,7 +39,7 @@ function App() {
   }
 
   function handleDeleteNote(noteId){
-    axios.delete("https://cohort-2-0-m32u.onrender.com/api/notes/"+noteId)
+    axios.delete("https://backend-twts.onrender.com/api/notes/"+noteId)
     .then(res=>{
       console.log(res.data)
       fetchNotes()
