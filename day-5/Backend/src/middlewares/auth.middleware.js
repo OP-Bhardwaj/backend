@@ -1,5 +1,8 @@
+const blacklistModel = require("../models/blacklist.model");
 const usermModel = require("../models/user.model");
+const redis = require("../config/cache");
 const jwt = require("jsonwebtoken");
+
 
 async function authUser(req, res, next) {
     const token = req.cookies.token;
@@ -10,6 +13,13 @@ async function authUser(req, res, next) {
             message: "TOKEN NOT PROVIDED"
         });
     }
+   const isBlacklisted = await redis.get(token);
+    if (isBlacklisted) {
+        return res.status(401).json({
+            message: "TOKEN IS BLACKLISTED"
+        });
+    } 
+
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET
         )
@@ -25,3 +35,6 @@ async function authUser(req, res, next) {
 }
 
 module.exports = {authUser};
+
+
+ 
