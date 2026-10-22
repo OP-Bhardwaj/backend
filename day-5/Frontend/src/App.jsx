@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
-import FaceExpressionReader from './Features/Expression/Components/FaceExpression';
+import { useState } from "react";
+import {RouterProvider} from "react-router-dom";
+import {router} from "./app.routes";
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <FaceExpressionReader/>
+    <RouterProvider router={router} />
   )
 }
 
