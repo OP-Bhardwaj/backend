@@ -1,0 +1,36 @@
+.register-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+    .form-container{
+        min-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        h1{
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group{
+            margin-bottom: 15px;
+
+            label{
+                display: block;
+                margin-bottom: 5px;
+            }            
+
+            input{
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+}

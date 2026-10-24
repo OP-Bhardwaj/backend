@@ -1,5 +1,6 @@
 import React from 'react'
 import "../style/login.scss"
+import FormGroup from '../components/FormGroup'
 
 const login = () => {
   return (
@@ -7,15 +8,11 @@ const login = () => {
     <div className="form-container">
       <h1>Login</h1>
       <form>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Login</button>
+        
+        <FormGroup label="Email" placeholder="Enter your email" type="email" />
+        <FormGroup label="Password" placeholder="Enter your password" type="password" />
+
+        <button className="button" type="submit">Login</button>
       </form>
     </div>
   </main>
