@@ -1,8 +1,14 @@
+import React, { useState } from "react";
 import "../style/register.scss";
 import FormGroup from "../components/FormGroup";
 import { Link } from "react-router-dom";
 
 const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <main className="register-page">
       <div className="form-container">

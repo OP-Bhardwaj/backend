@@ -1,10 +1,10 @@
 import axios from "axios";
-\
+
 const api = axios.create({
   baseURL: "http://localhost:3000",
+  withCredentials: true, // Placed at root configuration
   headers: {
     "Content-Type": "application/json",
-    withCredentials: true,
   },
 });
 
@@ -16,7 +16,7 @@ export async function register({email, password, username}) {
   return response.data;
 }
 
-export async function login({email,username, password}) {
+export async function login({email, password}) {
   const response = await api.post("/api/auth/login", {
     email, password
   })
