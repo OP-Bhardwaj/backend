@@ -4,6 +4,7 @@ import FormGroup from "../components/FormGroup";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../services/auth.api";
 
+
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
