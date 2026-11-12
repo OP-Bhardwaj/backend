@@ -13,7 +13,7 @@ const Protected = ({ children }) => {
     );
   }
 
-  if (!user && !loading) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
