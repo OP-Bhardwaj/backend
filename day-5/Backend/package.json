@@ -20,6 +20,7 @@
     "ioredis": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.3",
-    "multer": "^2.5.0"
+    "multer": "^2.5.0",
+    "node-id3": "^0.2.9"
   }
 }

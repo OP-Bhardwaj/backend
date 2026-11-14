@@ -1,7 +1,11 @@
 const songModel = require('../models/song.model');
+const id3 = require('node-id3');
 
 async function createSong(req, res) {
-  console.log(req.file); // Log the uploaded file information   
+
+  const tags = id3.read(req.file.buffer)
+  console.log(tags)
+
 }
 
 
