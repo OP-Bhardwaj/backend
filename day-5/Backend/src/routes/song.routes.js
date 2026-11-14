@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const songModel = require('../models/song.model');
+const upload = require("..//middlewares/upload.middleware.js");
+const songController = require('../controllers/song.controller.js');
 
 
-router.post("/")
+router.post("/", upload.single("song"), songController.uploadSong);
 
 module.exports = router;
