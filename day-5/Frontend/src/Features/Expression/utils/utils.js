@@ -1,11 +1,11 @@
 import { FilesetResolver, FaceLandmarker } from '@mediapipe/tasks-vision';
 
-export const initializeMediaPipe = async (landmarkerRef, requestRef, videoRef, setExpression) => {
+export const init = async ({ landmarkerRef, videoRef, streamRef, setExpression }) => {
   try {
     const vision = await FilesetResolver.forVisionTasks(
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
     );
-    
+
     landmarkerRef.current = await FaceLandmarker.createFromOptions(vision, {
       baseOptions: {
         modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
@@ -14,60 +14,54 @@ export const initializeMediaPipe = async (landmarkerRef, requestRef, videoRef, s
       outputFaceBlendshapes: true,
       runningMode: "VIDEO"
     });
-    
-    setExpression("Model loaded. Waiting for camera...");
-    // Pass everything to the camera function
-    startCamera(videoRef, landmarkerRef, requestRef, setExpression);
-  } catch (error) {
-    console.error("Error loading MediaPipe:", error);
-    setExpression("Error loading model.");
-  }
-}
 
-export const startCamera = async (videoRef, landmarkerRef, requestRef, setExpression) => {
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    try {
+    if (setExpression) setExpression("Model loaded. Starting camera...");
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (streamRef) streamRef.current = stream;
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        
-        // Wait until the video is ready before starting the analysis loop
-        videoRef.current.addEventListener("loadeddata", () => {
-            analyzeFrame(videoRef, landmarkerRef, requestRef, setExpression);
-        });
+        await videoRef.current.play();
+        if (setExpression) setExpression("Ready! Click 'Detect expression'");
       }
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      setExpression("Camera access denied.");
     }
+  } catch (error) {
+    console.error("Error initializing MediaPipe/Camera:", error);
+    if (setExpression) setExpression("Camera or model error.");
   }
 };
 
-export const analyzeFrame = (videoRef, landmarkerRef, requestRef, setExpression) => {
-  if (videoRef.current && landmarkerRef.current && videoRef.current.readyState >= 2) {
-    const startTimeMs = performance.now();
-    const results = landmarkerRef.current.detectForVideo(videoRef.current, startTimeMs);
-    
-    if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
-      const shapes = results.faceBlendshapes[0].categories;
-      
-      const smileLeft = shapes.find(s => s.categoryName === 'mouthSmileLeft')?.score || 0;
-      const smileRight = shapes.find(s => s.categoryName === 'mouthSmileRight')?.score || 0;
-      const jawOpen = shapes.find(s => s.categoryName === 'jawOpen')?.score || 0;
-      const browInnerUp = shapes.find(s => s.categoryName === 'browInnerUp')?.score || 0;
+export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
+  if (!videoRef.current || !landmarkerRef.current || videoRef.current.readyState < 2) {
+    return "Neutral";
+  }
 
-      if (smileLeft > 0.5 && smileRight > 0.5) {
-        setExpression("Smiling 😄");
-      } else if (jawOpen > 0.04 && browInnerUp > 0.04) {
-        setExpression("Surprised 😲");
-      } else {
-        setExpression("Neutral 😐");
-      }
-    } else {
-      setExpression("No face detected");
+  const startTimeMs = performance.now();
+  const results = landmarkerRef.current.detectForVideo(videoRef.current, startTimeMs);
+
+  let currentExpression = "Neutral";
+
+  if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
+    const shapes = results.faceBlendshapes[0].categories;
+
+    const smileLeft = shapes.find(s => s.categoryName === 'mouthSmileLeft')?.score || 0;
+    const smileRight = shapes.find(s => s.categoryName === 'mouthSmileRight')?.score || 0;
+    const jawOpen = shapes.find(s => s.categoryName === 'jawOpen')?.score || 0;
+    const browUp = shapes.find(s => s.categoryName === 'browInnerUp')?.score || 0;
+    const frownLeft = shapes.find(s => s.categoryName === 'mouthFrownLeft')?.score || 0;
+    const frownRight = shapes.find(s => s.categoryName === 'mouthFrownRight')?.score || 0;
+
+    if (smileLeft > 0.5 || smileRight > 0.5) {
+      currentExpression = "happy";
+    } else if (jawOpen > 0.2 && browUp > 0.2) {
+      currentExpression = "surprised";
+    } else if (frownLeft > 0.01 && frownRight > 0.01) {
+      currentExpression = "sad";
     }
   }
-  
-  // Keep loop running by passing the variables back into it
-  requestRef.current = requestAnimationFrame(() => analyzeFrame(videoRef, landmarkerRef, requestRef, setExpression));
+
+  if (setExpression) setExpression(currentExpression);
+  return currentExpression;
 };

@@ -3,47 +3,54 @@ const storageService = require('../services/storage.service');
 const id3 = require('node-id3');
 
 async function uploadSong(req, res) {
-
   const songBuffer = req.file.buffer;
-  const {mood} = req.body; // Get the mood from the request body
+  const { mood } = req.body;
 
   const tags = id3.read(songBuffer);
-  
-  const [songFile, posterFile] = await Promise.all([
+  const title = tags.title || req.file.originalname.replace(/\.[^/.]+$/, '');
+
+  const uploadTasks = [
     storageService.uploadFile({
       buffer: songBuffer,
-      fileName: tags.title ? `${tags.title}.mp3` : req.file.originalname,
+      fileName: `${title}.mp3`,
       folder: "/cohort2/moodify/songs",
     }),
-    storageService.uploadFile({
-      buffer: tags.image.imageBuffer,
-      fileName: tags.title ? `${tags.title}.jpeg` : req.file.originalname,
-      folder: "/cohort2/moodify/posters",
-    }),
-  ]);
+  ];
+
+  if (tags.image && tags.image.imageBuffer) {
+    uploadTasks.push(
+      storageService.uploadFile({
+        buffer: tags.image.imageBuffer,
+        fileName: `${title}.jpeg`,
+        folder: "/cohort2/moodify/posters",
+      })
+    );
+  }
+
+  const [songFile, posterFile] = await Promise.all(uploadTasks);
 
   const song = await songModel.create({
-    title: tags.title,
+    title: title,
     url: songFile.url,
-    posterUrl: posterFile.url,
-    mood: mood
+    posterUrl: posterFile ? posterFile.url : "https://ik.imagekit.io/your_id/default-poster.jpg",
+    mood: mood,
   });
 
-  res.status(201).json({ message: "Song created successfully", song }); // Add a response so Postman doesn't hang!
+  res.status(201).json({ message: "Song created successfully", song });
 }
 
 async function getSongs(req, res) {
-  const { mood } = req.query; // Get the mood from the query parameters
+  const { mood } = req.query;
 
   const song = await songModel.findOne({ mood });
 
   res.status(200).json({
-     message: "Songs fetched successfully", 
-    song 
-  }); // Add a response so Postman doesn't hang!
+    message: "Songs fetched successfully",
+    song,
+  });
 }
 
 module.exports = {
   uploadSong,
-  getSongs
+  getSongs,
 };

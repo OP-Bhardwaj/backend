@@ -2,23 +2,25 @@ const mongoose = require('mongoose');
 
 const songSchema = new mongoose.Schema({
   title: {
-    type: String,    
+    type: String,
     required: [true, 'Title is required'],
+  },
+  url: {
+    type: String,
+    required: [true, 'Audio URL is required'],
   },
   posterUrl: {
     type: String,
     required: [true, 'Poster URL is required'],
   },
-  titleUrl: {
-    type: String,
-    required: [true, 'Title URL is required'],
-  },
   mood: {
     type: String,
-    enum: ['happy', 'sad', 'surprised'], // Example moods, adjust as needed
-    message: 'Enum this is ',
-  }
-})
+    enum: {
+      values: ['happy', 'sad', 'surprised'],
+      message: '{VALUE} is not a valid mood',
+    },
+  },
+});
 
 const songModel = mongoose.model('songs', songSchema);
 

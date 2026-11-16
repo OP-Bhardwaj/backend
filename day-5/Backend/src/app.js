@@ -7,16 +7,16 @@ const authRoutes = require('./routes/auth.routes'); // adjust path if located in
 const songRoutes = require('./routes/song.routes'); // adjust path if located in src/routes/song.routes.js
 
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
-app.use('/api/songs', songRoutes);
 
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
+  origin: 'http://localhost:5173',
+  credentials: true
 }));
 
-// 2. Mount the auth router
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/api/songs', songRoutes);
 app.use('/api/auth', authRoutes);
 
 module.exports = app;
