@@ -32,6 +32,18 @@ async function uploadSong(req, res) {
   res.status(201).json({ message: "Song created successfully", song }); // Add a response so Postman doesn't hang!
 }
 
+async function getSongs(req, res) {
+  const { mood } = req.query; // Get the mood from the query parameters
+
+  const song = await songModel.findOne({ mood });
+
+  res.status(200).json({
+     message: "Songs fetched successfully", 
+    song 
+  }); // Add a response so Postman doesn't hang!
+}
+
 module.exports = {
-  uploadSong
+  uploadSong,
+  getSongs
 };
