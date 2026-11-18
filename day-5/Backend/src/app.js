@@ -3,8 +3,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 // 1. Import your auth routes
-const authRoutes = require('./routes/auth.routes'); // adjust path if located in src/routes/auth.routes.js
-const songRoutes = require('./routes/song.routes'); // adjust path if located in src/routes/song.routes.js
+const authRoutes = require('./routes/auth.routes'); // adjust path if located in src/routes/auth.routes.js...
+const songRoutes = require('./routes/song.routes'); // adjust path if located in src/routes/song.routes.js...
 
 const app = express();
 
